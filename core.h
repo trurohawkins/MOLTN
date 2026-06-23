@@ -1,10 +1,5 @@
 #ifndef CORE
 #define CORE
-#include <errno.h>
-
-#include "helper.h"
-#include "poll.h"
-
 extern atomic_int running;
 
 extern PollSystem outputPoll;

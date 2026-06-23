@@ -1,4 +1,4 @@
-#include "core.h"
+#include "MoltnCore.h"
 
 int main() {
 	initCore();

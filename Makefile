@@ -25,7 +25,7 @@ prod: LDFLAGS += $(PROD_LDFLAGS)
 prod: $(TARGET)
 
 # Linking
-$(TARGET): helper.h libMoltnCore.a libHelper.a  main.o  
+$(TARGET): MoltnCore.h libMoltnCore.a libHelper.a  main.o  
 	gcc main.o -o $@ $(LDFLAGS) libMoltnCore.a libHelper.a -lm
 
 libHelper.a:
@@ -40,6 +40,11 @@ helper.h:
 # Static lib
 libMoltnCore.a: core.o threads.o  poll.o
 	ar rs $@ $^
+
+MoltnCore.h: core.o helper.h
+	@echo "Generating moltnCore.h"
+	@echo "#pragma once" > MoltnCore.h
+	@cat  helper.h poll.h threads.h core.h  >> MoltnCore.h
 
 # Compiling
 main.o: main.c
@@ -60,7 +65,7 @@ clean:
 	rm -f *.o *.a *.d
 
 fclean:
-	rm -f $(TARGET) *.o *.a *.d helper.h
+	rm -f $(TARGET) *.o *.a *.d helper.h MoltnCore.h libMoltnCore.a
 
 fixTerminal:
 	stty sane

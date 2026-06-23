@@ -18,6 +18,8 @@ typedef struct {
 	PollHandler handler;
 } PollSystem;
 
+
+int getFdFromPoll(PollSystem poll);
 bool initPollSystem(PollSystem *poll, void (*func)(void));
 bool addFdToPoll(PollHandler* handler, int poll);
 bool runPolls(int pfd, struct epoll_event* polls, int count);

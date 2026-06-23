@@ -16,6 +16,10 @@ bool initPollSystem(PollSystem *poll, void (*func)(void)) {
 	return true;
 }
 
+int getFdFromPoll(PollSystem poll) {
+	return poll.handler.fd;
+}
+
 bool addFdToPoll(PollHandler *handler, int poll) {
 	struct epoll_event ev = {
 		.events = EPOLLIN,
