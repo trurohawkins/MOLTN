@@ -32,10 +32,10 @@ prod: LDFLAGS += $(PROD_LDFLAGS)
 prod: $(TARGET)
 
 # Linking
-$(TARGET): $(INCDIR)MoltnCore.h $(LIBDIR)libMoltnCore.a $(HELPERLIB)libHelper.a  main.o  
+$(TARGET): $(INCDIR)MoltnCore.h $(LIBDIR)libMoltnCore.a $(HELPERLIB)libHelper.a  $(HELPERINC)helper.h main.o  
 	gcc main.o -o $@ $(LDFLAGS) $(LIBDIR)libMoltnCore.a -L$(HELPERLIB) -lHelper -lm
 
-$(HELPERLIB)libHelper.a $(HELPERINC)helper.h:
+$(HELPERLIB)libHelper.a:
 	$(MAKE) -C $(HELPERDIR)
 
 # Static lib
