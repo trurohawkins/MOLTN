@@ -1,5 +1,12 @@
 TARGET = MoltnCore
 
+LIBDIR = lib/
+INCDIR = include/
+
+HELPERDIR = ../HelperFuncs/
+HELPERINC = $(HELPERDIR)include/
+HELPERLIB = $(HELPERDIR)lib/
+
 DEV_CFLAGS = -g -fsanitize=address,undefined -fno-omit-frame-pointer
 DEV_LDFLAGS = -fsanitize=address,undefined
 
@@ -9,7 +16,7 @@ TSAN_LDFLAGS = -fsanitize=thread
 PROD_CFLAGS = -O2
 PROD_LDFLAGS =
 
-CFLAGS = -MMD -MP
+CFLAGS = -MMD -MP -I$(HELPERINC) -I$(INCDIR)
 LDFLAGS =
 
 dev: CFLAGS += $(DEV_CFLAGS)
@@ -25,50 +32,39 @@ prod: LDFLAGS += $(PROD_LDFLAGS)
 prod: $(TARGET)
 
 # Linking
-$(TARGET): MoltnCore.h libMoltnCore.a libHelper.a  main.o  
-	gcc main.o -o $@ $(LDFLAGS) libMoltnCore.a libHelper.a -lm
+$(TARGET): $(INCDIR)MoltnCore.h $(LIBDIR)libMoltnCore.a $(HELPERLIB)libHelper.a  main.o  
+	gcc main.o -o $@ $(LDFLAGS) $(LIBDIR)libMoltnCore.a -L$(HELPERLIB) -lHelper -lm
 
-libHelper.a:
-	$(MAKE) -C ../FormNetwork/
-	cp ../FormNetwork/libHelper.a .
-
-helper.h:
-	$(MAKE) -C ../FormNetwork/
-	cp ../FormNetwork/helper.h .
-
+$(HELPERLIB)libHelper.a $(HELPERINC)helper.h:
+	$(MAKE) -C $(HELPERDIR)
 
 # Static lib
-libMoltnCore.a: core.o threads.o  poll.o
+$(LIBDIR)libMoltnCore.a: core.o threads.o  poll.o | $(LIBDIR)
 	ar rs $@ $^
-
-MoltnCore.h: core.o helper.h
-	@echo "Generating moltnCore.h"
-	@echo "#pragma once" > MoltnCore.h
-	@cat  helper.h poll.h threads.h core.h  >> MoltnCore.h
 
 # Compiling
 main.o: main.c
-	gcc $(CFLAGS) -c main.c -o $@
+	gcc $(CFLAGS)  -I$(INCDIR) -c main.c -o $@
 
 #CORE
-core.o: core.h core.c helper.h
+core.o: $(INCDIR)core.h core.c $(HELPERINC)helper.h
 	gcc $(CFLAGS) -c core.c -o $@
 
-poll.o: poll.c poll.h
+poll.o: poll.c $(INCDIR)poll.h
 	gcc $(CFLAGS) -c poll.c -o $@
 
-threads.o: threads.c threads.h
+threads.o: threads.c $(INCDIR)threads.h
 	gcc $(CFLAGS) -c threads.c -o $@
+
+$(LIBDIR):
+	mkdir -p $(LIBDIR)
 
 # tools
 clean:
-	rm -f *.o *.a *.d
+	rm -f *.o *.d
 
 fclean:
-	rm -f $(TARGET) *.o *.a *.d helper.h MoltnCore.h libMoltnCore.a
-
-fixTerminal:
-	stty sane
+	rm -f $(TARGET) *.o *.d $(LIBDIR)libMoltnCore.a 
 
 # merges .d files into dependency graph
 -include *.d
