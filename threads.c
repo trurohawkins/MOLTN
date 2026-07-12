@@ -21,7 +21,8 @@ pthread_t createThread(void*(*func)(void*), void *data, bool detached) {
 	pthread_attr_destroy(&attr);
 
 	if (err != 0) {
-		printf("error creating thread: %i\n", err);
+		//fix with return value
+		//printf("error creating thread: %i\n", err);
 	}
 
 	return threadHandle;
