@@ -45,6 +45,8 @@ bool runPolls(int pfd, struct epoll_event* polls, int count) {
 	}
 	for (int i = 0; i < n; i++) {
 		PollHandler *handler = polls[i].data.ptr;
+		uint64_t value;
+		//while (read(handler->fd, &value, sizeof(value)) > 0) {}
 		handler->func();
 	}
 	return true;

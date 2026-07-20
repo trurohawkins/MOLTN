@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+#include <pthread.h>
 #include "core.h"
 
 //used by poll handlers;
@@ -31,6 +33,8 @@ SystemQueue events;
 bool initCore() {
 	initPollSystem(&corePoll, &checkRunning);
 	running = 1;
+	pthread_setname_np(pthread_self(), "Main");
+
 	return true;
 }
 
