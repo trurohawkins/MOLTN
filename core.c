@@ -47,6 +47,11 @@ void exitCore() {
 	}
 }
 
+void exitCoreLoop() {
+	atomic_store_explicit(&running, false, memory_order_release);
+	wakeEvent();
+}
+
 void coreLoop() {
 	while (atomic_load_explicit(&running, memory_order_acquire)) {
 		runPolls(corePoll.pfd, corePoll.polls, 16);

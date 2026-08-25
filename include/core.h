@@ -12,6 +12,7 @@ extern PollSystem gamePoll;
 bool initCore();
 void exitCore();
 void coreLoop();
+void exitCoreLoop();
 bool addFdToCore(PollHandler* handler);
 bool initTimerFd(PollHandler *handler, int ticksPerSecond, void (*func)(void));
 void wakeEvent();
