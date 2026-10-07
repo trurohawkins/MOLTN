@@ -70,13 +70,6 @@ void wakeEvent() {
 	}
 }
 
-void debugWrite(char *message) {
-	FILE *fptr;
-	fptr = fopen("debug.log", "a");
-	fprintf(fptr, message);
-	fclose(fptr);
-}
-
 void checkRunning() {
 	//drain corePoll.handler
 	uint64_t v;

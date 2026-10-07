@@ -16,7 +16,6 @@ void exitCoreLoop();
 bool addFdToCore(PollHandler* handler);
 bool initTimerFd(PollHandler *handler, int ticksPerSecond, void (*func)(void));
 void wakeEvent();
-void debugWrite(char *message);
 
 //events
 #define EVENT_BUFFER_SIZE 32
